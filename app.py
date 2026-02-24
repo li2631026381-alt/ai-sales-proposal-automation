@@ -23,7 +23,10 @@ with st.sidebar:
         ["manual process", "high cost", "slow approval", "inconsistent quality", "slow response to client", "lack of standard template"],
         default=["manual process", "inconsistent quality"],
     )
-    workflow = st.text_area("Current Workflow Description", "Sales writes proposals manually using Word/PowerPoint; revisions via email; no standard ROI model.")
+    workflow = st.text_area(
+        "Current Workflow Description",
+        "Sales writes proposals manually using Word/PowerPoint; revisions via email; no standard ROI model."
+    )
     budget = st.selectbox("Budget Range", ["<HKD 50k", "HKD 50k–100k", "HKD 100k–300k", "HKD 300k+"])
     objective = st.text_input("Project Objective", "Reduce proposal preparation time and standardize deliverables.")
     timeline = st.selectbox("Timeline", ["2–4 weeks", "1–2 months", "2–3 months"])
@@ -46,10 +49,10 @@ roi_result = compute_roi(ROIInput(
     cost_per_hour_hkd=float(cost_per_hour),
     tool_monthly_cost_hkd=0.0
 ))
-
 st.write(roi_result)
 
 st.divider()
+
 if st.button("Generate Proposal"):
     payload = build_payload(
         industry=industry,
@@ -61,10 +64,8 @@ if st.button("Generate Proposal"):
         timeline=timeline,
     )
 
-    # 先用离线模式生成结构化内容（后面接API就在这里替换）
     data = generate_proposal_offline(payload)
 
-    # 把ROI结果写进提案说明（让它更像销售）
     data["roi_estimation_notes"] = (
         f"Based on inputs: {roi_result['weekly_hours_saved']} hours saved/week, "
         f"~HKD {roi_result['monthly_cost_saved_hkd']} saved/month, "
@@ -79,7 +80,7 @@ if st.button("Generate Proposal"):
     export_to_docx(data, docx_path)
 
     st.success("Generated!")
-    st.subheader("Preview (Text)")
+    st.subheader("Preview (JSON)")
     st.json(data)
 
     with open(pptx_path, "rb") as f:
