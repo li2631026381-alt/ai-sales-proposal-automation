@@ -41,9 +41,9 @@ def export_to_docx(data: dict, out_path: str) -> None:
 
     doc.add_heading("Sales Email Draft", level=2)
     email = data.get("sales_email_draft", {})
-    doc.add_paragraph("EN:", style=None)
+    doc.add_paragraph("EN:")
     doc.add_paragraph(email.get("en", ""))
-    doc.add_paragraph("ZH:", style=None)
+    doc.add_paragraph("ZH:")
     doc.add_paragraph(email.get("zh", ""))
 
     doc.save(out_path)
